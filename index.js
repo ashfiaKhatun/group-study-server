@@ -1,13 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: ['http://localhost:5000'],
+    origin: ['http://localhost:5173'],
     credentials: true
 }));
 
@@ -44,6 +44,13 @@ async function run() {
         app.get('/all-assignments', async (req, res) => {
             const result = await assignmentCollection.find().toArray();
             res.send(result);
+        })
+
+        app.get('/all-assignments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)}
+            const result = await assignmentCollection.findOne(query)
+            res.send(result)
         })
 
         app.post('/all-assignments', async (req, res) => {
