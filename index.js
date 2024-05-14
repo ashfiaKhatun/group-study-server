@@ -54,6 +54,14 @@ async function run() {
 
         })
 
+        app.get('/all-assignments/email/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = {email:email};
+            const result = await assignmentCollection.findOne(filter)
+            res.send(result)
+
+        })
+
         app.post('/all-assignments', async (req, res) => {
             const newAssignment = req.body;
             const result = await assignmentCollection.insertOne(newAssignment);
@@ -71,6 +79,7 @@ async function run() {
                     description: updateAssignment.description,
                     marks: updateAssignment.marks,
                     difficulty: updateAssignment.difficulty,
+                    updateDate: updateAssignment.updateDate,
                     photo: updateAssignment.photo,
                 }
             }
