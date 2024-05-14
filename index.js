@@ -6,11 +6,12 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors({
+const corsOptions = {
     origin: ['http://localhost:5173'],
-    credentials: true
-}));
-
+    credentials: true,
+    optionSuccessStatus: 200,
+}
+app.use(cors(corsOptions))
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Methods', 'DELETE, PUT, GET, POST')
@@ -18,7 +19,7 @@ app.use(function (req, res, next) {
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept'
     )
-    next();
+    next()
 })
 
 app.use(express.json());
@@ -56,7 +57,7 @@ async function run() {
 
         app.get('/all-assignments/email/:email', async (req, res) => {
             const email = req.params.email;
-            const filter = {email:email};
+            const filter = { email: email };
             const result = await assignmentCollection.findOne(filter)
             res.send(result)
 
@@ -84,6 +85,13 @@ async function run() {
                 }
             }
             const result = await assignmentCollection.updateOne(filter, assignment)
+            res.send(result);
+        })
+
+        app.delete('/all-assignments/:id', async (res, req) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await assignmentCollection.deleteOne(query);
             res.send(result);
         })
 
