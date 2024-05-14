@@ -48,14 +48,33 @@ async function run() {
 
         app.get('/all-assignments/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await assignmentCollection.findOne(query)
             res.send(result)
+
         })
 
         app.post('/all-assignments', async (req, res) => {
             const newAssignment = req.body;
             const result = await assignmentCollection.insertOne(newAssignment);
+            res.send(result);
+        })
+
+        app.put('/all-assignments/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateAssignment = req.body;
+
+            const assignment = {
+                $set: {
+                    title: updateAssignment.title,
+                    description: updateAssignment.description,
+                    marks: updateAssignment.marks,
+                    difficulty: updateAssignment.difficulty,
+                    photo: updateAssignment.photo,
+                }
+            }
+            const result = await assignmentCollection.updateOne(filter, assignment)
             res.send(result);
         })
 
