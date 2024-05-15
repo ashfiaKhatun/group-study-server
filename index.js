@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://group-study-8d6a9.firebaseapp.com', 'https://group-study-8d6a9.web.app'],
     credentials: true,
     optionSuccessStatus: 200,
 }
@@ -95,8 +95,21 @@ async function run() {
             res.send(result);
         })
 
-        
+        // submitted assignment
+        const submittedAssignmentCollection = client.db("assignment_collection").collection("submitted_assignments");
 
+        app.get('/all-submitted-assignments', async (req, res) => {
+            const newSubmittedAssignment = req.body;
+            const result = await submittedAssignmentCollection.find(newSubmittedAssignment).toArray();
+            res.send(result);
+        })
+
+        app.post('/all-submitted-assignments', async (req, res) => {
+            const newSubmittedAssignment = req.body;
+            const result = await submittedAssignmentCollection.insertOne(newSubmittedAssignment);
+            res.send(result);
+        })
+        
 
 
         // Send a ping to confirm a successful connection
