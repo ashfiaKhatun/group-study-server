@@ -69,12 +69,13 @@ async function run() {
             res.send(result);
         })
 
-        app.delete('/all-assignments/:id', async (res, req) => {
+        app.delete('/all-assignments/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await assignmentCollection.deleteOne(query);
             res.send(result);
         })
+
 
         app.put('/all-assignments/:id', async (req, res) => {
             const id = req.params.id;
@@ -104,11 +105,20 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/all-submitted-assignments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)}
+            const result = await submittedAssignmentCollection.findOne(query);
+            res.send(result);
+        })
+
         app.post('/all-submitted-assignments', async (req, res) => {
             const newSubmittedAssignment = req.body;
             const result = await submittedAssignmentCollection.insertOne(newSubmittedAssignment);
             res.send(result);
         })
+
+
         
 
 
