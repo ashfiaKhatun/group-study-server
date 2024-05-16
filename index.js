@@ -107,7 +107,7 @@ async function run() {
 
         app.get('/all-submitted-assignments/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await submittedAssignmentCollection.findOne(query);
             res.send(result);
         })
@@ -118,8 +118,35 @@ async function run() {
             res.send(result);
         })
 
+        app.put('/all-submitted-assignments/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateAssignment = req.body;
 
-        
+            const assignment = {
+                $set: {
+                    marksInput: updateAssignment.marksInput,
+                    feedBack: updateAssignment.feedBack,
+                    status: updateAssignment.status
+                }
+            }
+            const result = await submittedAssignmentCollection.updateOne(filter, assignment)
+            res.send(result);
+        })
+
+
+        // get data by user email
+        app.get('/all-submitted-assignments/email/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await submittedAssignmentCollection.find(query).toArray();
+            res.send(result);
+        })
+
+
+
+
+
 
 
         // Send a ping to confirm a successful connection
